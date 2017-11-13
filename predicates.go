@@ -6,17 +6,43 @@ import (
 	geom "github.com/twpayne/go-geom"
 )
 
-type predicate func(geofence *geom.Polygon, hash string) (bool, error)
-
 // Container tests if a hash is contained.
 type Container interface {
-	Contains(string) (bool, error)
+	Contains(*geom.Polygon, string) (bool, error)
 }
 
 // Intersector tests if a hash intersects.
 type Intersector interface {
-	Intersects(string) (bool, error)
+	Intersects(*geom.Polygon, string) (bool, error)
 }
+
+type predicate func(geofence *geom.Polygon, hash string) (bool, error)
+
+type containsFunc predicate
+
+func (f containsFunc) Contains(p *geom.Polygon, hash string) (bool, error) {
+	return f(p, hash)
+}
+
+type intersectsFunc predicate
+
+func (f intersectsFunc) Intersects(p *geom.Polygon, hash string) (bool, error) {
+	return f(p, hash)
+}
+
+// Intersects tests if the geofence contains the hash by doing a geos intersection.
+var Intersects = intersectsFunc(func(geofence *geom.Polygon, hash string) (bool, error) {
+	hashGeo := hashToGeometry(hash)
+	fence := polygonToGeometry(geofence)
+	return fence.Intersects(hashGeo)
+})
+
+// Contains tests if the geofence contains the hash by doing a geos contains.
+var Contains = containsFunc(func(geofence *geom.Polygon, hash string) (bool, error) {
+	hashGeo := hashToGeometry(hash)
+	fence := polygonToGeometry(geofence)
+	return fence.Contains(hashGeo)
+})
 
 func geomToGeosCoord(coord geom.Coord) geos.Coord {
 	return geos.Coord{
@@ -58,18 +84,4 @@ func polygonToGeometry(geofence *geom.Polygon) *geos.Geometry {
 	}
 
 	return geos.Must(geos.NewPolygon(shellGeos, holes...))
-}
-
-// Intersects tests if the geofence contains the hash by doing a geos intersection.
-func Intersects(geofence *geom.Polygon, hash string) (bool, error) {
-	hashGeo := hashToGeometry(hash)
-	fence := polygonToGeometry(geofence)
-	return fence.Intersects(hashGeo)
-}
-
-// Contains tests if the geofence contains the hash by doing a geos contains.
-func Contains(geofence *geom.Polygon, hash string) (bool, error) {
-	hashGeo := hashToGeometry(hash)
-	fence := polygonToGeometry(geofence)
-	return fence.Contains(hashGeo)
 }
