@@ -11,16 +11,16 @@ package may offer a utility in the future.
 func readFileAsGeometry(t *testing.T, file string) (*geom.Polygon, error) {
 	data, err := ioutil.ReadFile(file)
 	if err != nil {
-    return nil, err
-  }
+		return nil, err
+	}
 
 	poly := new(geom.T)
 	err = geojson.Unmarshal(data, poly)
-	if (err != nil) {
-    return nil, err
-  }
+	if err != nil {
+		return nil, err
+	}
 
-	return (*poly).(*geom.Polygon)
+	return nil, (*poly).(*geom.Polygon)
 }
 
 geofence := readFileAsGeometry("testdata/regents.geojson")
