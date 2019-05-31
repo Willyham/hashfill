@@ -29,7 +29,7 @@ type Filler interface {
 // RecursiveFiller fills the geofence by recursively searching for the largest geofence
 // which is matched by the intersecting/contains predicate.
 type RecursiveFiller struct {
-	minPrecision   int
+	maxPrecision   int
 	fixedPrecision bool
 	fillMode       FillMode
 	container      Container
@@ -43,7 +43,7 @@ type Option func(*RecursiveFiller)
 // Defaults to 6.
 func WithMaxPrecision(p int) Option {
 	return func(r *RecursiveFiller) {
-		r.minPrecision = p
+		r.maxPrecision = p
 	}
 }
 
@@ -66,7 +66,7 @@ func WithPredicates(contains Container, intersects Intersector) Option {
 // NewRecursiveFiller creates a new filler with the given options.
 func NewRecursiveFiller(options ...Option) *RecursiveFiller {
 	filler := &RecursiveFiller{
-		minPrecision:   6,
+		maxPrecision:   6,
 		fixedPrecision: false,
 		container:      Contains,
 		intersector:    Intersects,
@@ -102,7 +102,7 @@ func (f RecursiveFiller) Fill(fence *geom.Polygon, mode FillMode) ([]string, err
 
 // extendHashToMaxPrecision recursively extends out to the max precision.
 func (f RecursiveFiller) extendHashToMaxPrecision(hash string) []string {
-	if len(hash) == f.minPrecision {
+	if len(hash) == f.maxPrecision {
 		return []string{hash}
 	}
 	hashes := make([]string, 0, 32)
@@ -132,7 +132,7 @@ func (f RecursiveFiller) computeVariableHashses(fence *geom.Polygon, mode FillMo
 		return nil, nil
 	}
 
-	if len(hash) == f.minPrecision {
+	if len(hash) == f.maxPrecision {
 		// If we hit the max precision and we intersected but didn't contain,
 		// it means we're at the boundary and can't go any smaller. So if we're
 		// using FillIntersects, include the hash, otherwise don't.

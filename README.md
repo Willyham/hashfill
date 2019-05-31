@@ -8,6 +8,21 @@ of hashes which are completely contained or one which also includes where the bo
 package may offer a utility in the future.
 
 ```golang
+func readFileAsGeometry(t *testing.T, file string) (*geom.Polygon, error) {
+	data, err := ioutil.ReadFile(file)
+	if err != nil {
+    return nil, err
+  }
+
+	poly := new(geom.T)
+	err = geojson.Unmarshal(data, poly)
+	if (err != nil) {
+    return nil, err
+  }
+
+	return (*poly).(*geom.Polygon)
+}
+
 geofence := readFileAsGeometry("testdata/regents.geojson")
 filler := hashfill.NewRecursiveFiller(
   hashfill.WithMaxPrecision(8),
