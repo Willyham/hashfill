@@ -20,6 +20,10 @@ Would result in something that could be visualized as:
 
 ![](./doc/fill.png)
 
+### Installation
+
+This library depends on headers from the `geos` library. You can install with `brew install geos` or `dnf install geos-devel` on RPM based linux distros.
+
 ### Options
 - `WithMaxPrecision` - Sets the max hash precision the algorithm will generate hashes for.
 - `WithFixedPrecision` - Causes the fully contained geohashes to still be divided into the hashes of the max precision.
