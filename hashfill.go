@@ -31,7 +31,6 @@ type Filler interface {
 type RecursiveFiller struct {
 	maxPrecision   int
 	fixedPrecision bool
-	fillMode       FillMode
 	container      Container
 	intersector    Intersector
 }
