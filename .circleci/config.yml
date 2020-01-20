@@ -18,7 +18,7 @@ jobs:
 
       - run: sudo apt-get install libgeos-dev
       - run: go get github.com/jstemmer/go-junit-report
-      - mkdir /tmp/test_results
+      - run: mkdir /tmp/test_results
 
       - run: go get -v -t -d ./...
       - run: go test -v 2>&1 ./... | go-junit-report > /tmp/test_results/report.xml
