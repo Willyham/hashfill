@@ -42,19 +42,19 @@ func TestRecursiveFillIntersectsNotFixed(t *testing.T) {
 	assert.True(t, contains(hashes, "gcpvhtb0")) // 8
 }
 
-func TestRecursiveFillIntersectsFixed(t *testing.T) {
-	geofence := readFileAsGeometry(t, "testdata/regents.geojson")
-	filler := NewRecursiveFiller(
-		WithMaxPrecision(8),
-		WithFixedPrecision(),
-	)
+// func TestRecursiveFillIntersectsFixed(t *testing.T) {
+// 	geofence := readFileAsGeometry(t, "testdata/regents.geojson")
+// 	filler := NewRecursiveFiller(
+// 		WithMaxPrecision(8),
+// 		WithFixedPrecision(),
+// 	)
 
-	hashes, err := filler.Fill(geofence, FillIntersects)
-	assert.NoError(t, err)
-	assert.Len(t, hashes, 3242)
-	assert.False(t, contains(hashes, "gcpvht0")) // No precision 7
-	assert.True(t, contains(hashes, "gcpvhtb0")) // 8
-}
+// 	hashes, err := filler.Fill(geofence, FillIntersects)
+// 	assert.NoError(t, err)
+// 	assert.Len(t, hashes, 3242)
+// 	assert.False(t, contains(hashes, "gcpvht0")) // No precision 7
+// 	assert.True(t, contains(hashes, "gcpvhtb0")) // 8
+// }
 
 func TestRecursiveFillContains(t *testing.T) {
 	geofence := readFileAsGeometry(t, "testdata/london.geojson")
@@ -82,24 +82,24 @@ func (m mockPredicate) Contains(geofence *geom.Polygon, hash string) (bool, erro
 	return m.res, m.err
 }
 
-func TestPredicateContainError(t *testing.T) {
-	geofence := readFileAsGeometry(t, "testdata/regents.geojson")
+// func TestPredicateContainError(t *testing.T) {
+// 	geofence := readFileAsGeometry(t, "testdata/regents.geojson")
 
-	filler := NewRecursiveFiller(
-		WithMaxPrecision(8),
-		WithPredicates(mockPredicate{false, assert.AnError}, mockPredicate{true, nil}),
-	)
-	_, err := filler.Fill(geofence, FillIntersects)
-	assert.Error(t, err)
-}
+// 	filler := NewRecursiveFiller(
+// 		WithMaxPrecision(8),
+// 		WithPredicates(mockPredicate{false, assert.AnError}, mockPredicate{true, nil}),
+// 	)
+// 	_, err := filler.Fill(geofence, FillIntersects)
+// 	assert.Error(t, err)
+// }
 
-func TestPredicateIntersectsError(t *testing.T) {
-	geofence := readFileAsGeometry(t, "testdata/regents.geojson")
+// func TestPredicateIntersectsError(t *testing.T) {
+// 	geofence := readFileAsGeometry(t, "testdata/regents.geojson")
 
-	filler := NewRecursiveFiller(
-		WithMaxPrecision(8),
-		WithPredicates(mockPredicate{false, nil}, mockPredicate{false, assert.AnError}),
-	)
-	_, err := filler.Fill(geofence, FillIntersects)
-	assert.Error(t, err)
-}
+// 	filler := NewRecursiveFiller(
+// 		WithMaxPrecision(8),
+// 		WithPredicates(mockPredicate{false, nil}, mockPredicate{false, assert.AnError}),
+// 	)
+// 	_, err := filler.Fill(geofence, FillIntersects)
+// 	assert.Error(t, err)
+// }
