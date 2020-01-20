@@ -20,7 +20,17 @@ jobs:
       - run: go get github.com/jstemmer/go-junit-report
       - run: mkdir /tmp/test_results
 
+      - run:
+          name: Setup Code Climate test-reporter
+          command: |
+          # download test reporter as a static binary
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+
       - run: go get -v -t -d ./...
+
+      - run: ./cc-test-reporter before-build
       - run: go test -v 2>&1 ./... | go-junit-report > /tmp/test_results/report.xml
       - store_test_results:
           path: /tmp/test_results
+      - run: ./cc-test-reporter after-build /tmp/test_results
