@@ -14,7 +14,7 @@ jobs:
     #### expecting it in the form of
     ####   /go/src/github.com/circleci/go-tool
     ####   /go/src/bitbucket.org/circleci/go-tool
-    working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+    working_directory: /go/src/github.com/Willyham/hashfill
     steps:
       - checkout
 
@@ -31,7 +31,7 @@ jobs:
       - run: go get -v -t -d ./...
 
       - run: ./cc-test-reporter before-build
-      - run: go test -v 2>&1 ./... | go-junit-report > /tmp/test_results/report.xml
+      - run: go test -v -coverprofile=c.out ./... | go-junit-report > /tmp/test_results/report.xml
       - store_test_results:
           path: /tmp/test_results
-      - run: ./cc-test-reporter after-build /tmp/test_results
+      - run: ./cc-test-reporter after-build -t gocov
