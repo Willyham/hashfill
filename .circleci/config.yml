@@ -4,6 +4,8 @@
 version: 2
 jobs:
   build:
+    environment:
+      CC_TEST_REPORTER_ID: 49e910a0a76fec883e9301c43b6ec10c734e1f942df4abdeadf898b27a6ef2e7
     docker:
       # specify the version
       - image: circleci/golang:latest
