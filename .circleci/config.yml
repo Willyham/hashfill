@@ -4,6 +4,8 @@
 version: 2
 jobs:
   build:
+    environment:
+      CC_TEST_REPORTER_ID: 49e910a0a76fec883e9301c43b6ec10c734e1f942df4abdeadf898b27a6ef2e7
     docker:
       # specify the version
       - image: circleci/golang:latest
@@ -12,10 +14,24 @@ jobs:
     #### expecting it in the form of
     ####   /go/src/github.com/circleci/go-tool
     ####   /go/src/bitbucket.org/circleci/go-tool
-    working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+    working_directory: /go/src/github.com/Willyham/hashfill
     steps:
       - checkout
 
-      # specify any bash command here prefixed with `run: `
+      - run: sudo apt-get install libgeos-dev
+      - run: go get github.com/jstemmer/go-junit-report
+      - run: mkdir /tmp/test_results
+
+      - run:
+          name: Setup Code Climate test-reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+
       - run: go get -v -t -d ./...
-      - run: go test -v ./...
+
+      - run: ./cc-test-reporter before-build
+      - run: go test -v -coverprofile=c.out ./... | go-junit-report > /tmp/test_results/report.xml
+      - store_test_results:
+          path: /tmp/test_results
+      - run: ./cc-test-reporter after-build -t gocov
