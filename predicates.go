@@ -1,6 +1,8 @@
 package hashfill
 
 import (
+	"fmt"
+
 	"github.com/mmcloughlin/geohash"
 	"github.com/paulsmith/gogeos/geos"
 	geom "github.com/twpayne/go-geom"
@@ -76,6 +78,11 @@ func polygonToGeometry(geofence *geom.Polygon) *geos.Geometry {
 	shell := geofence.LinearRing(0).Coords()
 	shellGeos := geomToGeosCoords(shell)
 
+	// This nonsense should be covered
+	foo := 1
+	bar := 2
+	fmt.Println(bar - foo)
+
 	// Convert each hole to geos format.
 	numHoles := geofence.NumLinearRings() - 1
 	holes := make([][]geos.Coord, numHoles)
@@ -86,17 +93,10 @@ func polygonToGeometry(geofence *geom.Polygon) *geos.Geometry {
 	return geos.Must(geos.NewPolygon(shellGeos, holes...))
 }
 
-func polygonToGeometry2(geofence *geom.Polygon) *geos.Geometry {
-	// Convert the outer shell to geos format.
-	shell := geofence.LinearRing(0).Coords()
-	shellGeos := geomToGeosCoords(shell)
-
-	// Convert each hole to geos format.
-	numHoles := geofence.NumLinearRings() - 1
-	holes := make([][]geos.Coord, numHoles)
-	for i := 0; i < numHoles; i++ {
-		holes[i] = geomToGeosCoords(geofence.LinearRing(i).Coords())
-	}
-
-	return geos.Must(geos.NewPolygon(shellGeos, holes...))
+func someRandomFunc() bool {
+	// Not covered
+	baz := 1
+	qux := 2
+	fmt.Println(baz, qux)
+	return true
 }
