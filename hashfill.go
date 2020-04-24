@@ -80,7 +80,6 @@ func NewRecursiveFiller(options ...Option) *RecursiveFiller {
 // It works by computing a set of variable length geohashes which are contained
 // in the polygon, then optionally extending those hashes out to the specified precision.
 func (f RecursiveFiller) Fill(fence *geom.Polygon, mode FillMode) ([]string, error) {
-	// Comment to demonstrate coverage in this func.
 	hashes, err := f.computeVariableHashses(fence, mode, "")
 	if err != nil {
 		return nil, err
@@ -92,7 +91,6 @@ func (f RecursiveFiller) Fill(fence *geom.Polygon, mode FillMode) ([]string, err
 
 	// If we want fixed precision, we have to iterate through each hash and split it down
 	// to the precision we want.
-	// Comment to demonstrate coverage in this func.
 	out := make([]string, 0, len(hashes))
 	for _, hash := range hashes {
 		extended := f.extendHashToMaxPrecision(hash)

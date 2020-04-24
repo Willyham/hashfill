@@ -56,3 +56,12 @@ func TestPredicates(t *testing.T) {
 		})
 	}
 }
+
+func TestPolygonToGeometryExample(t *testing.T) {
+	geofence := readFileAsGeometry(t, "testdata/regents.geojson")
+
+	geom := polygonToGeometryExample(geofence)
+	perimeterLength, err := geom.Length()
+	require.NoError(t, err)
+	assert.Equal(t, geofence.Length(), perimeterLength)
+}
