@@ -85,3 +85,18 @@ func polygonToGeometry(geofence *geom.Polygon) *geos.Geometry {
 
 	return geos.Must(geos.NewPolygon(shellGeos, holes...))
 }
+
+func polygonToGeometryExample(geofence *geom.Polygon) *geos.Geometry {
+	// Convert the outer shell to geos format.
+	shell := geofence.LinearRing(0).Coords()
+	shellGeos := geomToGeosCoords(shell)
+
+	// Convert each hole to geos format.
+	numHoles := geofence.NumLinearRings() - 1
+	holes := make([][]geos.Coord, numHoles)
+	for i := 0; i < numHoles; i++ {
+		holes[i] = geomToGeosCoords(geofence.LinearRing(i).Coords())
+	}
+
+	return geos.Must(geos.NewPolygon(shellGeos, holes...))
+}
